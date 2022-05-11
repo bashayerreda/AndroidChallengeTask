@@ -1,9 +1,8 @@
-package com.example.instabugtask
+package com.example.taskinstabug.services.remote
 
-import android.util.Log
 import com.example.instabugtask.pojo.WordsModel
 import com.example.instabugtask.utils.*
-import com.example.instabugtask.WordsService.LoadingData
+import com.example.taskinstabug.services.WordsService.LoadingData
 import java.io.BufferedInputStream
 import java.io.InputStream
 import java.net.HttpURLConnection

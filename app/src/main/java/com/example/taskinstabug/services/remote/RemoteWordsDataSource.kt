@@ -1,4 +1,6 @@
-package com.example.instabugtask
+package com.example.taskinstabug.services.remote
+
+import com.example.taskinstabug.services.WordsService
 
 interface RemoteWordsDataSource {
 

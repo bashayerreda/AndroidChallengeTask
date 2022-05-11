@@ -1,4 +1,4 @@
-package com.example.taskinstabug
+package com.example.taskinstabug.ui
 
 import android.app.AlertDialog
 import android.app.SearchManager
@@ -14,6 +14,9 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.instabugtask.pojo.WordsModel
+import com.example.taskinstabug.connectivity.ConnectionLiveData
+import com.example.taskinstabug.R
+import com.example.taskinstabug.WordsAdapter
 import kotlinx.android.synthetic.main.fragment_search.*
 
 
@@ -45,7 +48,7 @@ class SearchFragment : Fragment() {
         val wordsViewModel: SearchFragmentViewModel by viewModels()
         val progressBar = progress_bar
         val textViewError = text_view_error
-        val networkStatus = network_status
+
         rv = rc_data
         rv.layoutManager = LinearLayoutManager(activity)
         wordsAdapter = WordsAdapter(mutableListOf())
@@ -62,11 +65,11 @@ class SearchFragment : Fragment() {
         wordsViewModel.onlineLiveData.observe(this, Observer { connected ->
             if (connected) {
                 textViewError.visibility = View.GONE
-                networkStatus.visibility = View.GONE
+
                 wordsViewModel.loadData()
             } else {
                 progressBar.visibility = View.GONE
-                networkStatus.visibility = View.VISIBLE
+
 
             }
 

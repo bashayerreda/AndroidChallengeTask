@@ -1,4 +1,4 @@
-package com.example.instabugtask
+package com.example.taskinstabug.services
 
 import com.example.instabugtask.pojo.WordsModel
 

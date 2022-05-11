@@ -1,9 +1,9 @@
-package com.example.taskinstabug
+package com.example.taskinstabug.ui
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.instabugtask.WordsRemoteRepo
-import com.example.instabugtask.WordsService
+import com.example.taskinstabug.services.remote.WordsRemoteRepo
+import com.example.taskinstabug.services.WordsService
 import com.example.instabugtask.pojo.WordsModel
 
 class SearchFragmentViewModel  : ViewModel() {

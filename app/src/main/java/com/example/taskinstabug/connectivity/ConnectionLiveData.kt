@@ -1,4 +1,4 @@
-package com.example.taskinstabug
+package com.example.taskinstabug.connectivity
 
 import android.annotation.SuppressLint
 import android.annotation.TargetApi

@@ -21,10 +21,10 @@ import kotlinx.android.synthetic.main.fragment_search.*
 
 
 class SearchFragment : Fragment() {
-    var searchText = ""
-    val wordsViewModel: SearchFragmentViewModel by viewModels()
 
-    //val wordsViewModel : SearchFragmentViewModel = ViewModelProvider(this).get(SearchFragmentViewModel::class.java)
+    val wordsViewModel: SearchFragmentViewModel by viewModels()
+    //val wordRepository: WordRepository =
+
     private lateinit var wordsAdapter: WordsAdapter
     private lateinit var rv: RecyclerView
     private lateinit var connectionLiveData: ConnectionLiveData
@@ -59,7 +59,7 @@ class SearchFragment : Fragment() {
             progressBar.visibility = View.GONE
 
         })
-        wordsViewModel.loadData(searchText)
+        wordsViewModel.loadData()
 
 
         wordsViewModel.onlineLiveData.observe(this, Observer { connected ->
@@ -84,6 +84,7 @@ class SearchFragment : Fragment() {
         })
 
     }
+
 
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -111,6 +112,7 @@ class SearchFragment : Fragment() {
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
+
                 return false
             }
 
@@ -121,9 +123,12 @@ class SearchFragment : Fragment() {
             }
 
 
+        })
+        searchView.setOnCloseListener {
+            wordsViewModel!!.loadData()
+            true
         }
 
-        )
 
 
     }

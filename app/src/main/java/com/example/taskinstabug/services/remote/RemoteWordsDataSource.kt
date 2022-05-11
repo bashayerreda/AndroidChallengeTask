@@ -1,10 +1,12 @@
 package com.example.taskinstabug.services.remote
 
-import com.example.taskinstabug.services.WordsService
+import com.example.taskinstabug.services.LoadingData
+
+import com.example.taskinstabug.ui.SearchFragmentViewModel
 
 interface RemoteWordsDataSource {
 
-    fun getWords(callback: WordsService.LoadingData, keyword: String, sortBy: String)
+    fun getWords(callback: LoadingData)
 
 
 }

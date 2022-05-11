@@ -2,17 +2,18 @@ package com.example.taskinstabug.services.remote
 
 import com.example.instabugtask.pojo.WordsModel
 import com.example.instabugtask.utils.*
-import com.example.taskinstabug.services.WordsService.LoadingData
+import com.example.taskinstabug.services.LoadingData
+
 import java.io.BufferedInputStream
 import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.concurrent.Executor
 
-class WordsRemoteRepo constructor(private val executor: Executor) :
-    RemoteWordsDataSource {
+class WordRemoteDataSource constructor(private val executor: Executor) :
+   RemoteWordsDataSource {
 
-    override fun getWords(callback: LoadingData, keyword: String, sortBy: String) {
+    override fun  getWords(callback: LoadingData) {
         val runnable = Runnable {
 
             var result: String
@@ -34,7 +35,7 @@ class WordsRemoteRepo constructor(private val executor: Executor) :
             }
 
             val list: MutableList<WordsModel> = result.parseHTML().splitBySpace().fetchWords()
-            list.sortedByDescending { it.quantity }
+            list.sortedBy { it.quantity }
 
 
             if (list.isNotEmpty()) {
@@ -47,12 +48,14 @@ class WordsRemoteRepo constructor(private val executor: Executor) :
     }
 
     companion object {
-        private var instance: WordsRemoteRepo? = null
-        fun getInstance(): WordsRemoteRepo? {
+        private var instance: WordRemoteDataSource? = null
+        fun getInstance(): WordRemoteDataSource? {
             if (instance == null) {
-                instance = WordsRemoteRepo(ExecutorPool())
+                instance = WordRemoteDataSource(ExecutorPool())
             }
             return instance
         }
     }
+
+
 }

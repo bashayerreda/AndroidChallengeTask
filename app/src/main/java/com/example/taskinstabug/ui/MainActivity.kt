@@ -12,6 +12,7 @@ import com.example.taskinstabug.R
 
 class MainActivity : AppCompatActivity() {
    // val model: SearchFragmentViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

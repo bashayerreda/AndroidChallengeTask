@@ -22,14 +22,13 @@ class DataBaseQuery(context: Context) {
        var keyword: String = ""
         val mDatabase = dbHelper.readableDatabase
         val contentList: ArrayList<WordsModel> = ArrayList()
-        Log.v("bash", "data is " + "Here")
         val selectionQuery = if(keyword.isEmpty()){
             " "
         }else{
             " WHERE ${DatabaseHelper.COL_NAME} LIKE '%$keyword%' "
         }
-        val selectQuery = "SELECT * FROM ${DatabaseHelper.TABLE_WORD}$selectionQuery order by CAST(${DatabaseHelper.COL_QUANTITY} AS INTEGER)"
-        Log.v("reda", selectQuery)
+        val selectQuery = "SELECT * FROM ${DatabaseHelper.TABLE_WORD}$selectionQuery order by CAST(${DatabaseHelper.COL_QUANTITY} AS INTEGER )"
+
 
 
         val cursor = mDatabase.rawQuery(selectQuery, null)
@@ -67,6 +66,21 @@ class DataBaseQuery(context: Context) {
             close()
         }
     }
+
+    fun saveWord(model: WordsModel): Long{
+        val db = open()
+
+        val contentValues = ContentValues()
+
+        contentValues.put(DatabaseHelper.COL_NAME, model.name)
+        contentValues.put(DatabaseHelper.COL_QUANTITY, model.quantity)
+
+        val success = db.insert(DatabaseHelper.TABLE_WORD, null, contentValues)
+        close()
+
+        return success
+    }
+
     fun close(){
         dbHelper.close()
     }

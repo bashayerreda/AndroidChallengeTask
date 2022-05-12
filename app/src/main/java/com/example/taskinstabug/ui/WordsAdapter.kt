@@ -24,7 +24,7 @@ class WordsAdapter(var apiList: MutableList<WordsModel>) : RecyclerView.Adapter<
         this.apiList = apilist
 
         notifyDataSetChanged()
-        //Log.d("ba", "api: $apiList")
+        Log.d("ba", "api: $apiList")
     }
 
 

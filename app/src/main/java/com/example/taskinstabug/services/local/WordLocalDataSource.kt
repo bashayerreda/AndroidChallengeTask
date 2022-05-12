@@ -6,13 +6,13 @@ import com.example.instabugtask.utils.ExecutorPool
 import com.example.taskinstabug.services.LoadingData
 import java.util.concurrent.Executor
 
-class WordLocalDataSource private constructor(
+class WordLocalDataSource constructor(
 private val executor: Executor,
-private val wordQuery: DataBaseQuery
+private val query: DataBaseQuery
 ) : LocalDataSource {
     override fun getWords(callback: LoadingData) {
         val runnable = Runnable {
-            val words = wordQuery.getWords()
+            val words = query.getWords()
             if (words.isNotEmpty()) {
                 callback.onLoaded(words)
             } else {
@@ -23,7 +23,8 @@ private val wordQuery: DataBaseQuery
     }
 
     override fun saveWords(words: List<WordsModel>?) {
-        val runnable = Runnable { wordQuery.saveWords(words!!) }
+        val runnable = Runnable {
+            query?.saveWords(words!!) }
         executor.execute(runnable)
     }
 

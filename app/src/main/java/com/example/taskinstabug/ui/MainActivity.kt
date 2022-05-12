@@ -11,7 +11,6 @@ import com.example.taskinstabug.R
 
 
 class MainActivity : AppCompatActivity() {
-   // val model: SearchFragmentViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         fragmentManager.beginTransaction().add(R.id.main_layout, memeFragment).commit()
     }
 
-fun biometricAuth(){
+ fun biometricAuth(){
     val biometricManager =  BiometricManager.from(this)
 
     //Some more information on biometric support

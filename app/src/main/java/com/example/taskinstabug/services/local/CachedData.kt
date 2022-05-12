@@ -1,27 +1,22 @@
 package com.example.taskinstabug.services.local
 
-import android.util.Log
 import com.example.instabugtask.pojo.WordsModel
-import com.example.instabugtask.utils.ExecutorPool
 import com.example.taskinstabug.WordRepository
 import com.example.taskinstabug.services.LoadingData
 import com.example.taskinstabug.services.remote.RemoteWordsDataSource
 import com.example.taskinstabug.services.remote.WordRemoteDataSource
 
-class CachedData private constructor(
+class CachedData(
     wordRemote: WordRemoteDataSource?,
     wordLocal: WordLocalDataSource?
 ) : WordRepository {
-    private val wordRemote: RemoteWordsDataSource?
-    private val wordLocal: LocalDataSource?
-
-
+    private val remoteWordsDataSource: RemoteWordsDataSource?
+    private val localDataSource: LocalDataSource?
 
     override fun getWords(callback: LoadingData) {
-        if (callback == null) return
-        wordLocal!!.getWords(object : LoadingData {
+
+        localDataSource!!.getWords(object : LoadingData {
             override fun onLoaded(words: MutableList<WordsModel>?) {
-                Log.v("get local", "From Local: $words")
                 callback.onLoaded(words)
             }
 
@@ -34,11 +29,10 @@ class CachedData private constructor(
         })
     }
 
-    private fun getDataFromRemoteDataSource(callback: LoadingData) {
-        wordRemote!!.getWords(object : LoadingData {
+    fun getDataFromRemoteDataSource(callback: LoadingData) {
+        remoteWordsDataSource!!.getWords(object : LoadingData {
             override fun onLoaded(words: MutableList<WordsModel>?) {
                 saveWords(words)
-                Log.v("tsts", "From Remote Into Local: $words")
                 callback.onLoaded(words?.sortedBy { it.quantity } as MutableList<WordsModel>?)
             }
 
@@ -57,17 +51,29 @@ class CachedData private constructor(
 
     }
 
-
+    companion object {
+        private var instance: CachedData? = null
+        fun getInstance(
+            wordRemote: WordRemoteDataSource?,
+            wordLocal: WordLocalDataSource?
+        ): CachedData? {
+            if (instance == null) {
+                instance = CachedData(wordRemote, wordLocal)
+            }
+            return instance
+        }
+    }
 
     override fun saveWords(words: List<WordsModel>?) {
-        wordLocal!!.saveWords(words)
+        localDataSource?.saveWords(words)
+
 
     }
 
 
     init {
-        this.wordRemote = wordRemote
-        this.wordLocal = wordLocal
+        this.remoteWordsDataSource = wordRemote
+        this.localDataSource = wordLocal
     }
 
 }

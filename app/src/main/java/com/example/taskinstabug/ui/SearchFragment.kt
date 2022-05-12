@@ -17,13 +17,17 @@ import com.example.instabugtask.pojo.WordsModel
 import com.example.taskinstabug.connectivity.ConnectionLiveData
 import com.example.taskinstabug.R
 import com.example.taskinstabug.WordsAdapter
+import com.example.taskinstabug.services.LoadingData
+import com.example.taskinstabug.services.local.CachedData
+import com.example.taskinstabug.services.local.LocalDataSource
+import com.example.taskinstabug.services.local.WordLocalDataSource
+import com.example.taskinstabug.services.remote.WordRemoteDataSource
 import kotlinx.android.synthetic.main.fragment_search.*
 
 
 class SearchFragment : Fragment() {
 
     val wordsViewModel: SearchFragmentViewModel by viewModels()
-    //val wordRepository: WordRepository =
 
     private lateinit var wordsAdapter: WordsAdapter
     private lateinit var rv: RecyclerView
@@ -33,8 +37,6 @@ class SearchFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-
         val v = inflater.inflate(R.layout.fragment_search, container, false)
         callNetworkConnection()
         return v
@@ -48,7 +50,6 @@ class SearchFragment : Fragment() {
         val wordsViewModel: SearchFragmentViewModel by viewModels()
         val progressBar = progress_bar
         val textViewError = text_view_error
-
         rv = rc_data
         rv.layoutManager = LinearLayoutManager(activity)
         wordsAdapter = WordsAdapter(mutableListOf())
@@ -59,22 +60,7 @@ class SearchFragment : Fragment() {
             progressBar.visibility = View.GONE
 
         })
-        wordsViewModel.loadData()
-
-
-        wordsViewModel.onlineLiveData.observe(this, Observer { connected ->
-            if (connected) {
-                textViewError.visibility = View.GONE
-
-                wordsViewModel.loadData()
-            } else {
-                progressBar.visibility = View.GONE
-
-
-            }
-
-        })
-
+        wordsViewModel.loadData(requireContext())
         wordsViewModel.errorMessages.observe(this, Observer { errorMessage ->
             progressBar.visibility = View.GONE
             textViewError.visibility = View.VISIBLE
@@ -84,9 +70,6 @@ class SearchFragment : Fragment() {
         })
 
     }
-
-
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.search_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
@@ -124,10 +107,6 @@ class SearchFragment : Fragment() {
 
 
         })
-        searchView.setOnCloseListener {
-            wordsViewModel!!.loadData()
-            true
-        }
 
 
 
@@ -143,7 +122,7 @@ class SearchFragment : Fragment() {
                 filteredlist.add(item)
 
                 print(filteredlist.size)
-                //Log.d("bbs", "From Remote: $filteredlist")
+
             }
         }
         if (filteredlist.isEmpty()) {
@@ -151,12 +130,9 @@ class SearchFragment : Fragment() {
             Toast.makeText(activity, "No Data Found..", Toast.LENGTH_SHORT).show()
         } else {
             wordsAdapter.setData(filteredlist)
-
-
             wordsAdapter.notifyDataSetChanged()
         }
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
@@ -209,6 +185,7 @@ class SearchFragment : Fragment() {
         connectionLiveData.observe(this, { isConnected ->
             if (isConnected) {
             } else {
+
                 val dialogBuilder = AlertDialog.Builder(activity)
                 dialogBuilder.setMessage("there is no connection please open wifi or mobile data and try again later")
                     .setCancelable(false)
